@@ -1,0 +1,11 @@
+name: STAMET-FS25
+channels:
+  - conda-forge
+dependencies:
+  - numpy
+  - pandas
+  - matplotlib
+  - scipy
+  - scikit-learn
+  - jupyter
+  - uncertainties
