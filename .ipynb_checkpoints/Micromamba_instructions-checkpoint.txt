@@ -1,0 +1,8 @@
+To activate the environment with micromamba, since the environment has somwhoe been placed in a hidden folder of brew, you have to run the command line
+
+	micromamba activate /opt/homebrew/envs/STAMET-FS25
+
+on the terminal instead of the simple "activate" command. Also, to open the web-like page you have to type in
+
+	jupyter notebook
+
