@@ -2,12 +2,11 @@ KEY POINTS:
 • Only modify in branch Personal
 • Always leave current branch on Personal
 • Only pull from branch STAMET_FS25
-• Never merge Personal->STAMET_FS25, always merge STAMET_FS25->Personal
+• Never merge Personal->STAMET_FS25, always merge STAMET_FS25->Personal. ACTUALLY, I don't want to merge
+  STAMET_FS25 into personal anymore cause it's full of crazy stuff by irresponsible gitters. I'd rather
+  selectively add only the files I'm interested into: Exercises and Solutions with the same picky selec-
+  tion described below
 • Only pick selected files from Personal into STAMET_FS25
-
-
-
-
 
 
 
