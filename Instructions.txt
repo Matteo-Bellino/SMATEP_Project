@@ -30,7 +30,8 @@ For maximum order and to avoid mixing things, I propose to create another branch
 - Then switch to Personal branch and merge the STAMET_FS25 (no conflict shall occurr because there should only be additional files from the prof).
 - To upload my exercises I have to switch to STAMET_FS25, manually copying the files I want to make visible, and committing. Alternatively to copying files, I can merge only specific files from the most recent commit of Personal as 
 				git restore --source Personal -- Exercise1
-which has to be performed in the STAMET_FS25 branch.
+which has to be performed in the STAMET_FS25 branch. Another way which works better cause you can see which files are there (robust agains mis-spelling the files' names) is using
+	git checkout STAMET_FS25 -- exercises/Exercise4/Exercise4_solutions.ipynb
 
 
 ########################################################################################################
