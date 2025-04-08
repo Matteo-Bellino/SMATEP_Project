@@ -1,174 +1,92 @@
-# Exercises for the Statistical Methods and Analysis Techniques.
+# $\psi(2S)$ Discovery with CMS OpenData
 
-The exercise part of the class is contained in this folder. During the exercise classes, you will write code in _Python_ using a web-application called _jupyter notebook_ and upload your solutions to the course _gitlab_. Each week a new set of exercises will be presented and included in this folder. The students will upload their solutions in the same folder. Please named your own solutions as `Exercise1/Exercise1_LASTNAME.ipynb`. The teaching assistants will provide some feedback to the exercise the next class, if any. The solutions of each exercise will be uploaded the next class.
+This exercise uses the CMS public data from the 2010 proton-proton run. In particular, the invariant mass spectrum of muon pairs from data is provided. The purpose of the project is to approach the discovery of a "new" particle in the context of the observation of the ψ(2S) resonance in the CMS data.
 
-## Tools for the class
+This is what the distribution of the dimuon invariant mass spectrum looks like with about 2% of the total 2010 statistics:
 
-In this exercise class, we will use the following tools:
- * [Python](https://www.python.org/): a powerful programming language for data analysis.
- * [Anaconda](https://www.anaconda.com/): This is a powerful tool to install python libraries.
- * [Miniconda](https://docs.conda.io/en/latest/miniconda.html): This is a smaller version of Anaconda. For this class most likely the libraries in miniconda are sufficient enough for the exercises, but if you want the complete set of python libraries you can use anaconda.
- * [Jupyter notebooks](https://jupyter.org/): it is web-application and user-friendly tool to create code and include plots or comments. 
- * [gitlab](https://about.gitlab.com/): Git is a tool for versioning control code. We will use one of its variants: gitlab.
- * Terminals: even though we will use jupyter notebooks for coding, basic knowledge on terminals in linux is required.
+<img src="images/Exercise0_data.png" alt="data_lowstat" width="500"/>
 
-## Set up Conda
+The J/ψ is of course very visible around the 3.1 GeV mass point, while for the ψ(2S) we expect to see an excess around 3.65 GeV.
 
-To be able to use jupyter notebook, we would like you to set up the needed environment using Anaconda program. If you have never programmed or installed any packages within a bash shell or terminal, we recommend to follow the instructions for Anaconda installation below. For students, already familiar with programming in a shell terminal, we suggest to only install miniconda (follow Miniconda installation bellow). It takes much less memory and is sufficient for everything we will do during the course.
+The tasks in what follows will be referenced to as **M** if they are mandatory for the project and **A** if they are advanced. Read carefully the **entire** guide before starting.
 
-### Only for Windows users
+## Datasets
 
-If you have Windows 10, you have already access to a terminal. 
-If you dont have Windows 10, you need to install a _client_ to access a terminal. There are a couple of these clients in the market, and one of them is [PuTTY](https://www.putty.org/). To install it, please follow the instructions from that website.
+In this project you are provided with two datasets, ```DataSet_lowstat.pkl``` and ```DataSet.pkl```, which both refer to the invariant mass of a muon-antimuon pair. The difference bitween the two is that ```DataSet_lowstat.pkl``` corresponds to about 20\% of the statistics available in 2010, while ```DataSet.pkl``` contains the full statistics. You will be asked to use the full statistics dataset for the mandatory tasks and the low statistics one for the rest.
 
-Unfortunately most of the teaching asistants do not use Windows but if you need support, please send us an email and we will try to help you.
+## Task 1 - M
 
+In this part you are required to define the model (i.e. the total PDF) and fit it to the invariant mass distribution contained in ```DataSet.pkl```. Here are some tips:
 
-### Anaconda installation
+- the observable can be fit in a range of [2, 6] GeV
+- to model the J/ψ peak you can use a Crystal Ball distribution with the following values for the parameters (starting value, [low limit, high limit]): mean (3.1, [2.8, 3.4]), sigma (0.3, [0.0001, 1]), alpha (1.5, [-5, 5]), n (1.5, [0.5, 10])
+- to model the ψ(2S) peak you can use another Crystal Ball distribution with the following values for the parameters: mean (3.7, [2.5, 3.95]) and sigma, alpha, n like the J/ψ
+- to model the background you can use a Chebychev polynomial of order 3, with the first three coefficients having the following values: a1 (-0.7, [-2, 2]), a2 (0.3, [-2, 2]), a3 (-0.03, [-2, 2])
 
-Please follow the instructions on how to install anaconda for your operating system from [here](https://docs.anaconda.com/anaconda/install/). Pick the **python 3** version corresponding to the operating system on your laptop, and follow the installation instructions on the web-site. Beware, this installation will need approximately 8 Gb.
+For each of these components, you then need to define a parameter to describe the yield (number of events). Note that since our **Parameter of Interest** is the ψ(2S) **cross section**, rather than the simple number of events, it is convenient to define the latter as a function of the former:
 
-To test if the program is correctly installed, you can follow the instructions below to run the program:
- * For Windows: Programs -> Anaconda navigator -> jupyter notebook -> new -> python3
- * For Linux: from the terminal type _anaconda-navigator_ -> jupyter notebook -> new -> python3
- * For Mac OS: _launch anaconda-navigator_  -> jupyter notebook -> new -> python
+$$N_{\psi(2S)} = \epsilon_{\mu\mu} \cdot \ell \cdot \sigma_{\psi(2S)}$$
 
-To test your setup, in the cell that appear when you create a new notebook, please type/copy:
-```
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-import scipy as sp
-```
-and press `Shift+Enter`.
-    
-If **no output** is printed, your setup works. If some error is shown, it may be due to some missing package. Refer to [this website](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-pkgs.html) for installing the missing package.
-If you have no clue about what to do to solve an installation error, try to google the error or send us an email. Meanwhile we will have a look on our side and go back to you as soon as possible.
-    
-In any case, **don't panic**, we will go through any remaining installation problems on the first exercise class.
+where efficiency and luminosity will be set constant to **75\%** and **37 inverse pb** respectively.
 
-### Miniconda installation
+For yields and cross section you can use the following (starting value, [low limit, high limit]):
 
-Remember that you do not need to have anaconda **and** miniconda at the same time. Install miniconda if you want a lighter version of anaconda. To install it please follow the instructions for your operating system from [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/).  When the installation is finished, close and open a new terminal window.
-(If you are a Windows user, please look at the previous instructions on how to install a terminal)
+- J/ψ yield (1500, [0, 10000])
+- ψ(2S) cross section (3, [0, 40])
+- background yield (5000, [0, 50000])
 
-### Create an Environment
+After running the fit and plotting model and distribution, you should obtain something like the following:
 
-The nicest feature of conda is the possibility to create separate and indipentend environments. This is useful especially for the final projects, during which you might want to install some fancy libraries without screwing up the environment that you used for the exercises. One way to create an environment consists in using an environment YAML file in which we specify the name of the environment and the packages we want to include. 
+<img src="images/Exercise0.png" alt="data" width="500"/>
 
-You can see that a file called ```environment.yml``` is already present at the root level of this repo. After cloning this repo (see last paragraph of this guide), in order to create the environment run:
-```
-conda env create -f environment.yml
-```
-Note that this command will create an environment with the most recent version of Python3. If you want to pick a specific/less recent version you can add another item to the ```dependencies``` list, e.g. ```python=3.8```.
-Once your environment is created, you need to _ACTIVATE_ this environment, as:
-```
-conda activate STAMET-FS25
-```
+## Task 2 - M
 
-To test your setup, type `jupyter notebook` in your terminal. You will get a new tab opened in your browser. On the right top corner press `New` -> `Notebook (python 3)`. In the cell that appears when you create a new notebook, please type/copy :
-To test your setup, in the cell that appear when you create a new notebook, please type/copy:
-```
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-import scipy as sp
-```
-and press `Shift+Enter`.
+With the full statistics dataset the **excess significance** is enough to claim the discovery of a new particle (you can quantify it if you want, but it is not required in this task), so we want to provide a **confidence interval** for our POI. To do so, we can use the **profile likelihood ratio** defined by
 
-If **no output** is printed, your setup works. If some error is shown, it may be due to some missing package. Refer to [this website](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-pkgs.html) for installing the missing package. 
-If you have no clue about what to do to solve an installation error, try to google the error or send us an email. Meanwhile we will have a look on our side and go back to you as soon as possible.
-    
-In any case, **don't panic**, we will go through any remaining installation problems on the first exercise class.
+$$\lambda(\mu)=\frac{L(\mu, \hat{\hat{\theta}})}{L(\hat{\mu}, \hat{\theta})}$$
 
-### Getting fancy with mamba
+where:
 
-You might have noticed that conda is not exactly fast. If you don't want to wait much every time you create a new environment you can use [mamba](https://github.com/mamba-org/mamba).
-To install mamba follow the instructions reported in the [documentation](https://mamba.readthedocs.io/en/latest/installation.html).
+- $\mu$ is the value we are testing (ψ(2S) cross section);
+- $\hat{\hat{\theta}}$ is the best fit of the nuisance parameters once the $\mu$ we want to test is fixed;
+- $\hat{\mu}$ and $\hat{\theta}$ are the best fit values for $\mu$ and $\theta$ when both are left floating in the likelihood.
 
-From now on, every time you run one of the commands mentioned above, you can change the word ```conda``` with ```mamba``` and it will be much faster!
+If you perform a *scan* of the POI and plot the value of $-2\lambda(\mu)$ you can produce a plot like the following:
 
-## Git: clone the repo and get started
+<img src="images/Exercise4.png" alt="ex3" width="500"/>
 
-Git is the tool that we use for managing the code in our repository. A very simple tutorial on how to install it in your operating system and the basic commands needed can be found [in this link](https://rogerdudler.github.io/git-guide/).
+where the **68\% CL interval** is given by the points at which $-2\lambda(\mu)$ is 1.
 
-_Remember that you will use git to download the class repository to your computer, and to upload your exercises each class._
+## Task 3 - A
 
-To upload files to our [central repository](https://gitlab.ethz.ch/mdonega/STAMET_FS21), you need to add your key to your gitlab account _one time only_. Some instructions can be found [in this website](https://gitlab.ethz.ch/profile/keys). 
+In this task we introduce a **systematic uncertainty** and we investigate how this affects the final result. Let's assume we have 10\% uncertainty on the signal efficiency for which we assume a Gaussian behavior. In your model you will have to rewrite the efficiency as 
+$$\epsilon = \kappa \cdot \epsilon$$
+and insert a Gaussian constraint for $\kappa$.
 
-Quick example:
+After deriving also in this case 68\% CL interval you should see something like the following:
 
-1. Before reading how to *generate* an ssh key, you probably want to check if you already have one. They are usually located at ```~/.ssh```. So, if when you run 
-```
-ls ~/.ssh
-```
-you see an output that includes ```id_rsa``` and ```id_rsa.pub```, you don't need to generate a new key and you can directly skip to step 3, where you will learn how to upload it in gitlab;
+<img src="images/Exercise5.png" alt="ex4" width="500"/>
 
-2. In your terminal type:
-```
-ssh-keygen -C 'your_email@ethz.ch'
-```
-the outcome will look similar than this:
-```
-Generating public/private rsa key pair.
-Enter file in which to save the key (/Users/Nadezda/.ssh/id_rsa): /Users/Nadezda/.ssh/id_rsa
-Enter passphrase (empty for no passphrase):
-Enter same passphrase again:
-Your identification has been saved in /Users/Nadezda/.ssh/id_rsa.
-Your public key has been saved in /Users/Nadezda/.ssh/id_rsa.pub.
-```
+in line with the fact that the systematic uncertainty that we introduced increases the size of the CL we found for the POI.
 
-3. After the previous step, a key was created in your computer. You need to copy that key to your gitlab account [in this website](https://gitlab.ethz.ch/profile/keys). To print out your key, using the same example:
-```
-cat /Users/Nadezda/.ssh/id_rsa.pub
-```
-this command `cat` only prints out your key which look like:
-```
-ssh-rsa AAAAB3NzaC1yc2EAfdsjfkhakdjsfhkalfaskafcqJG6Gw0Vhlz8xjSoVOGB2XDq+bHeYGj5MMyjSfF0V7tsxzJhf+gUqmM42zL4qPhEqEgGeLh7qrARWtoiKQ==your_email@ethz.ch
-```
-copy this line and add it as keys to your gitlab profile.
+## Task 4 - A
+This is the most challenging task and requires using concepts that are going to be introduced only in the last three/four weeks of the course. 
 
-Note: in case you decide NOT to use the default name for the key (i.e. ```id_rsa.pub```, which is kept automatically if you press ENTER in the process) you have to add the key to the SSH agent. Follow [these instructions](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#adding-your-ssh-key-to-the-ssh-agent) if this is the case.
+First of all repeat the procedure performed in task 1 using the dataset ```Dataset_lowstat.pkl```, changing the luminosity to **0.64 inverse pb**.
 
-After your key is properly included in your profile you can clone the repository:
-```
-git clone git@gitlab.ethz.ch:mdonega/STAMET_FS25.git
-cd STATMET_FS25/
-git checkout -t origin/STAMET_FS25
-```
-or, in just one step:
-```
-git clone -b STAMET_FS25 git@gitlab.ethz.ch:mdonega/STAMET_FS25.git
-cd STAMET_FS25
-```
-First time and every Tuesday morning get the updates:
-```
-git pull origin STAMET_FS25
-```
-To push your project to the repository:
-```
-git add myNotebook.ipynb
-git commit -m "my commit"
-git push origin STAMET_FS25
-```
-To check the status of your repository:
-```
-git status
-```
-If you accidentaly made changes to files you did not want to change, you can retrive the original version by doing the following:
-```
-git checkout -- file.py
-```
+Now compute the **excess significance** of the ψ(2S) peak in units of sigma. What you will see, given the low statistics of the sample, is that the number of sigmas is way too low to claim a discovery of the ψ(2S) resonance.
 
-## Useful tutorials.
+What happens in these cases is that we set an **upper limit** for our POI (the ψ(2S) cross section) following the prescription described in the [paper](https://arxiv.org/abs/1007.1727?context=hep-ex) *Asymptotic formulae for likelihood-based tests of new physics*. 
 
-In addition, the following is a list of useful self-explanatory tutorials for the basic tools that you will need for the exercise class.:
- * [git - the simple guide](https://rogerdudler.github.io/git-guide/): the basics about git.
- * [Version Control with Git](https://swcarpentry.github.io/git-novice/): a more comprehensive git tutorial.
- * [Git Handbook](https://guides.github.com/introduction/git-handbook/): the official git handbook
- * [Plotting and Programming in Python](https://alistairwalsh.github.io/python-novice-gapminder/): quick and complete tutorial with useful examples. It also includes examples about mathplotlib.
- * [Python for data analysis](https://education.molssi.org/python-data-analysis/index.html): quick introduction of numpy, pandas and scipy.
- * [Jupyter Notebook: An Introduction](https://realpython.com/jupyter-notebook-introduction/): a simple introduction.
+The upper limit found with this prescription can be visualized like the following
 
+<img src="images/Exercise3.png" alt="ex2" width="500"/>
 
-Disclaimer: there are many of these free tutorials online. Here is just a list gathered by the teaching assistants that they find them useful. 
+where the actual value can be found by reading the x-axis value for the point in which the red line (0.05 significance) crosses the black line with red dots.
+
+Now, this might sound scary and overwhelming, but since this is a common practice in HEP there are of course tools that already perform these operations. We will talk about them at the end of the explanation.
+
+## zfit
+
+You might try to perform all the tasks *by hand*, but this will probably require a lot of time! 
+Instead, we suggest to use [zfit](https://zfit.readthedocs.io/en/latest/) and its [tutorials](https://github.com/zfit/zfit-tutorials), where you should find pretty much everything you need. In particular, you might want to take a look at [this notebook](https://github.com/zfit/zfit-tutorials/blob/master/guides/constraints_simultaneous_fit_discovery_splot.ipynb) to get the results required in Task 4.
