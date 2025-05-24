@@ -38,6 +38,7 @@ def plotlimit(ul, alpha=0.05, CLs=True, ax=None):
         linewidth=2.0,
         ms=11,
     )
+    print(f'CLs = {pvalues["cls"]}')
 
     ax.plot(
         poivalues,
@@ -73,6 +74,8 @@ def plotlimit(ul, alpha=0.05, CLs=True, ax=None):
         linewidth=1.5,
         ms=10,
     )
+    print(f'Median = {pvalues["expected"]}')
+
 
     ax.plot(
         [poivalues[0], poivalues[-1]],
@@ -90,6 +93,8 @@ def plotlimit(ul, alpha=0.05, CLs=True, ax=None):
         label="Expected CL$_{s} \\pm 1 \\sigma$",
         alpha=0.8,
     )
+    print(f'+1 sigma = {pvalues["expected_p1"]}')
+
 
     ax.fill_between(
         poivalues,
@@ -98,6 +103,8 @@ def plotlimit(ul, alpha=0.05, CLs=True, ax=None):
         facecolor=color_1sigma,
         alpha=0.8,
     )
+    print(f'-1 sigma = {pvalues["expected_m1"]}')
+
 
     ax.fill_between(
         poivalues,
@@ -107,6 +114,8 @@ def plotlimit(ul, alpha=0.05, CLs=True, ax=None):
         label="Expected CL$_{s} \\pm 2 \\sigma$",
         alpha=0.8,
     )
+    print(f'+2 sigma = {pvalues["expected_p2"]}')
+
 
     ax.fill_between(
         poivalues,
@@ -115,6 +124,8 @@ def plotlimit(ul, alpha=0.05, CLs=True, ax=None):
         facecolor=color_2sigma,
         alpha=0.8,
     )
+    print(f'-2 sigma = {pvalues["expected_m2"]}')
+
 
     ax.set_ylim(-0.01, 1.1)
     ax.set_ylabel("p-value")
