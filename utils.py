@@ -38,8 +38,6 @@ def plotlimit(ul, alpha=0.05, CLs=True, ax=None):
         linewidth=2.0,
         ms=11,
     )
-<<<<<<< HEAD
-=======
     print(f'CLs = {pvalues["cls"]}')
 
     ax.plot(
@@ -1042,7 +1040,6 @@ def plotlimit_corrected_observed(ul, alpha=0.05, CLs=True, ax=None):
         linewidth=2.0,
         ms=11,
     )
->>>>>>> Alternative_JPsi
 
     ax.plot(
         poivalues,
@@ -1079,15 +1076,6 @@ def plotlimit_corrected_observed(ul, alpha=0.05, CLs=True, ax=None):
         ms=10,
     )
 
-<<<<<<< HEAD
-    ax.plot(
-        [poivalues[0], poivalues[-1]],
-        [alpha, alpha],
-        color="r",
-        linestyle="-",
-        linewidth=1.5,
-    )
-=======
     #ax.plot(
     #    [poivalues[0], poivalues[-1]],
     #    [alpha, alpha],
@@ -1095,7 +1083,6 @@ def plotlimit_corrected_observed(ul, alpha=0.05, CLs=True, ax=None):
     #    linestyle="-",
     #    linewidth=1.5,
     #)
->>>>>>> Alternative_JPsi
 
     ax.fill_between(
         poivalues,
@@ -1136,23 +1123,4 @@ def plotlimit_corrected_observed(ul, alpha=0.05, CLs=True, ax=None):
     ax.set_xlabel("parameter of interest")
     ax.legend(loc="best", fontsize=14)
 
-<<<<<<< HEAD
     return ax
-
-
-def one_minus_cl_plot(ci, alpha=[0.32], ax=None):
-    x = ci.poinull.values
-    pvalues = ci.pvalues()
-
-    if ax is None:
-        ax = plt.gca()
-
-    ax.plot(x, pvalues, ".--")
-    for a in alpha:
-        ax.axhline(a, color="red", label="$\\alpha = " + str(a) + "$")
-    ax.set_ylabel("1-CL")
-
-    return ax
-=======
-    return ax
->>>>>>> Alternative_JPsi
