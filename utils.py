@@ -38,6 +38,9 @@ def plotlimit(ul, alpha=0.05, CLs=True, ax=None):
         linewidth=2.0,
         ms=11,
     )
+<<<<<<< HEAD
+=======
+    print(f'CLs = {pvalues["cls"]}')
 
     ax.plot(
         poivalues,
@@ -73,6 +76,8 @@ def plotlimit(ul, alpha=0.05, CLs=True, ax=None):
         linewidth=1.5,
         ms=10,
     )
+    print(f'Median = {pvalues["expected"]}')
+
 
     ax.plot(
         [poivalues[0], poivalues[-1]],
@@ -81,6 +86,639 @@ def plotlimit(ul, alpha=0.05, CLs=True, ax=None):
         linestyle="-",
         linewidth=1.5,
     )
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_p1"],
+        facecolor=color_1sigma,
+        label="Expected CL$_{s} \\pm 1 \\sigma$",
+        alpha=0.8,
+    )
+    print(f'+1 sigma = {pvalues["expected_p1"]}')
+
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_m1"],
+        facecolor=color_1sigma,
+        alpha=0.8,
+    )
+    print(f'-1 sigma = {pvalues["expected_m1"]}')
+
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected_p1"],
+        pvalues["expected_p2"],
+        facecolor=color_2sigma,
+        label="Expected CL$_{s} \\pm 2 \\sigma$",
+        alpha=0.8,
+    )
+    print(f'+2 sigma = {pvalues["expected_p2"]}')
+
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected_m1"],
+        pvalues["expected_m2"],
+        facecolor=color_2sigma,
+        alpha=0.8,
+    )
+    print(f'-2 sigma = {pvalues["expected_m2"]}')
+
+
+    ax.set_ylim(-0.01, 1.1)
+    ax.set_ylabel("p-value")
+    ax.set_xlabel("parameter of interest")
+    ax.legend(loc="best", fontsize=14)
+
+    return ax
+
+
+def one_minus_cl_plot(ci, alpha=[0.32], ax=None):
+    x = ci.poinull.values
+    pvalues = ci.pvalues()
+
+    if ax is None:
+        ax = plt.gca()
+
+    ax.plot(x, pvalues, ".--")
+    for a in alpha:
+        ax.axhline(a, color="red", label="$\\alpha = " + str(a) + "$")
+    ax.set_ylabel("1-CL")
+
+    return ax
+
+def plotlimit_theoretical_median(ul, alpha=0.05, CLs=True, ax=None):
+    """plot pvalue scan for different values of a parameter of interest (observed, expected and +/- sigma bands)
+
+    Args:
+        ul: UpperLimit instance
+        alpha (float, default=0.05): significance level
+        CLs (bool, optional): if `True` uses pvalues as $$p_{cls}=p_{null}/p_{alt}=p_{clsb}/p_{clb}$$
+            else as $$p_{clsb} = p_{null}$
+        ax (matplotlib axis, optionnal)
+    """
+    if ax is None:
+        ax = plt.gca()
+
+    poivalues = ul.poinull.values
+    pvalues = ul.pvalues(CLs=CLs)
+
+    if CLs:
+        cls_clr = "r"
+        clsb_clr = "b"
+    else:
+        cls_clr = "b"
+        clsb_clr = "r"
+
+    color_1sigma = "mediumseagreen"
+    color_2sigma = "gold"
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["cls"],
+    #    label="Observed CL$_{s}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor=cls_clr,
+    #    markeredgecolor=cls_clr,
+    #    linewidth=2.0,
+    #    ms=11,
+    #)
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["clsb"],
+    #    label="Observed CL$_{s+b}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor=clsb_clr,
+    #    markeredgecolor=clsb_clr,
+    #    linewidth=2.0,
+    #    ms=11,
+    #    linestyle=":",
+    #)
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["clb"],
+    #    label="Observed CL$_{b}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor="k",
+    #    markeredgecolor="k",
+    #    linewidth=2.0,
+    #    ms=11,
+    #)#
+
+    ax.plot(
+        poivalues,
+        pvalues["expected"],
+        label="Expected CL$_{s}-$Median",
+        color="k",
+        linestyle="--",
+        linewidth=1.5,
+        ms=10,
+    )
+
+    #ax.plot(
+    #    [poivalues[0], poivalues[-1]],
+    #    [alpha, alpha],
+    #    color="r",
+    #    linestyle="-",
+    #    linewidth=1.5,
+    #)
+
+    #ax.fill_between(
+    #    poivalues,
+    #    pvalues["expected"],
+    #    pvalues["expected_p1"],
+    #    facecolor=color_1sigma,
+    #    label="Expected CL$_{s} \\pm 1 \\sigma$",
+    #    alpha=0.8,
+    #)
+
+    #ax.fill_between(
+    #    poivalues,
+    #    pvalues["expected"],
+    #    pvalues["expected_m1"],
+    #    facecolor=color_1sigma,
+    #    alpha=0.8,
+    #)
+#
+    #ax.fill_between(
+    #    poivalues,
+    #    pvalues["expected_p1"],
+    #    pvalues["expected_p2"],
+    #    facecolor=color_2sigma,
+    #    label="Expected CL$_{s} \\pm 2 \\sigma$",
+    #    alpha=0.8,
+#    )
+
+    #ax.fill_between(
+    #    poivalues,
+    #    pvalues["expected_m1"],
+    #    pvalues["expected_m2"],
+    #    facecolor=color_2sigma,
+    #    alpha=0.8,
+    #)#
+
+    ax.set_ylim(-0.01, 1.1)
+    ax.set_ylabel("p-value")
+    ax.set_xlabel("parameter of interest")
+    ax.legend(loc="best", fontsize=14)
+
+    return ax
+
+def plotlimit_theoretical_1sigma_lower(ul, alpha=0.05, CLs=True, ax=None):
+    """plot pvalue scan for different values of a parameter of interest (observed, expected and +/- sigma bands)
+
+    Args:
+        ul: UpperLimit instance
+        alpha (float, default=0.05): significance level
+        CLs (bool, optional): if `True` uses pvalues as $$p_{cls}=p_{null}/p_{alt}=p_{clsb}/p_{clb}$$
+            else as $$p_{clsb} = p_{null}$
+        ax (matplotlib axis, optionnal)
+    """
+    if ax is None:
+        ax = plt.gca()
+
+    poivalues = ul.poinull.values
+    pvalues = ul.pvalues(CLs=CLs)
+
+    if CLs:
+        cls_clr = "r"
+        clsb_clr = "b"
+    else:
+        cls_clr = "b"
+        clsb_clr = "r"
+
+    color_1sigma = "mediumseagreen"
+    color_2sigma = "gold"
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["cls"],
+    #    label="Observed CL$_{s}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor=cls_clr,
+    #    markeredgecolor=cls_clr,
+    #    linewidth=2.0,
+    #    ms=11,
+    #)
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["clsb"],
+    #    label="Observed CL$_{s+b}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor=clsb_clr,
+    #    markeredgecolor=clsb_clr,
+    #    linewidth=2.0,
+    #    ms=11,
+    #    linestyle=":",
+    #)
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["clb"],
+    #    label="Observed CL$_{b}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor="k",
+    #    markeredgecolor="k",
+    #    linewidth=2.0,
+    #    ms=11,
+    #)#
+
+    ax.plot(
+        poivalues,
+        pvalues["expected"],
+        label="Expected CL$_{s}-$Median",
+        color="k",
+        linestyle="--",
+        linewidth=1.5,
+        ms=10,
+    )
+
+    #ax.plot(
+    #    [poivalues[0], poivalues[-1]],
+    #    [alpha, alpha],
+    #    color="r",
+    #    linestyle="-",
+    #    linewidth=1.5,
+    #)
+
+    #ax.fill_between(
+    #    poivalues,
+    #    pvalues["expected"],
+    #    pvalues["expected_p1"],
+    #    facecolor=color_1sigma,
+    #    label="Expected CL$_{s} \\pm 1 \\sigma$",
+    #    alpha=0.8,
+    #)
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_m1"],
+        facecolor=color_1sigma,
+        alpha=0.8,
+    )
+#
+    #ax.fill_between(
+    #    poivalues,
+    #    pvalues["expected_p1"],
+    #    pvalues["expected_p2"],
+    #    facecolor=color_2sigma,
+    #    label="Expected CL$_{s} \\pm 2 \\sigma$",
+    #    alpha=0.8,
+#    )
+
+    #ax.fill_between(
+    #    poivalues,
+    #    pvalues["expected_m1"],
+    #    pvalues["expected_m2"],
+    #    facecolor=color_2sigma,
+    #    alpha=0.8,
+    #)#
+
+    ax.set_ylim(-0.01, 1.1)
+    ax.set_ylabel("p-value")
+    ax.set_xlabel("parameter of interest")
+    ax.legend(loc="best", fontsize=14)
+
+    return ax
+
+def plotlimit_theoretical_1sigma(ul, alpha=0.05, CLs=True, ax=None):
+    """plot pvalue scan for different values of a parameter of interest (observed, expected and +/- sigma bands)
+
+    Args:
+        ul: UpperLimit instance
+        alpha (float, default=0.05): significance level
+        CLs (bool, optional): if `True` uses pvalues as $$p_{cls}=p_{null}/p_{alt}=p_{clsb}/p_{clb}$$
+            else as $$p_{clsb} = p_{null}$
+        ax (matplotlib axis, optionnal)
+    """
+    if ax is None:
+        ax = plt.gca()
+
+    poivalues = ul.poinull.values
+    pvalues = ul.pvalues(CLs=CLs)
+
+    if CLs:
+        cls_clr = "r"
+        clsb_clr = "b"
+    else:
+        cls_clr = "b"
+        clsb_clr = "r"
+
+    color_1sigma = "mediumseagreen"
+    color_2sigma = "gold"
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["cls"],
+    #    label="Observed CL$_{s}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor=cls_clr,
+    #    markeredgecolor=cls_clr,
+    #    linewidth=2.0,
+    #    ms=11,
+    #)
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["clsb"],
+    #    label="Observed CL$_{s+b}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor=clsb_clr,
+    #    markeredgecolor=clsb_clr,
+    #    linewidth=2.0,
+    #    ms=11,
+    #    linestyle=":",
+    #)
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["clb"],
+    #    label="Observed CL$_{b}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor="k",
+    #    markeredgecolor="k",
+    #    linewidth=2.0,
+    #    ms=11,
+    #)#
+
+    ax.plot(
+        poivalues,
+        pvalues["expected"],
+        label="Expected CL$_{s}-$Median",
+        color="k",
+        linestyle="--",
+        linewidth=1.5,
+        ms=10,
+    )
+
+    #ax.plot(
+    #    [poivalues[0], poivalues[-1]],
+    #    [alpha, alpha],
+    #    color="r",
+    #    linestyle="-",
+    #    linewidth=1.5,
+    #)
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_p1"],
+        facecolor=color_1sigma,
+        label="Expected CL$_{s} \\pm 1 \\sigma$",
+        alpha=0.8,
+    )
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_m1"],
+        facecolor=color_1sigma,
+        alpha=0.8,
+    )
+#
+    #ax.fill_between(
+    #    poivalues,
+    #    pvalues["expected_p1"],
+    #    pvalues["expected_p2"],
+    #    facecolor=color_2sigma,
+    #    label="Expected CL$_{s} \\pm 2 \\sigma$",
+    #    alpha=0.8,
+#    )
+
+    #ax.fill_between(
+    #    poivalues,
+    #    pvalues["expected_m1"],
+    #    pvalues["expected_m2"],
+    #    facecolor=color_2sigma,
+    #    alpha=0.8,
+    #)#
+
+    ax.set_ylim(-0.01, 1.1)
+    ax.set_ylabel("p-value")
+    ax.set_xlabel("parameter of interest")
+    ax.legend(loc="best", fontsize=14)
+
+    return ax
+
+def plotlimit_theoretical_2sigma_lower(ul, alpha=0.05, CLs=True, ax=None):
+    """plot pvalue scan for different values of a parameter of interest (observed, expected and +/- sigma bands)
+
+    Args:
+        ul: UpperLimit instance
+        alpha (float, default=0.05): significance level
+        CLs (bool, optional): if `True` uses pvalues as $$p_{cls}=p_{null}/p_{alt}=p_{clsb}/p_{clb}$$
+            else as $$p_{clsb} = p_{null}$
+        ax (matplotlib axis, optionnal)
+    """
+    if ax is None:
+        ax = plt.gca()
+
+    poivalues = ul.poinull.values
+    pvalues = ul.pvalues(CLs=CLs)
+
+    if CLs:
+        cls_clr = "r"
+        clsb_clr = "b"
+    else:
+        cls_clr = "b"
+        clsb_clr = "r"
+
+    color_1sigma = "mediumseagreen"
+    color_2sigma = "gold"
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["cls"],
+    #    label="Observed CL$_{s}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor=cls_clr,
+    #    markeredgecolor=cls_clr,
+    #    linewidth=2.0,
+    #    ms=11,
+    #)
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["clsb"],
+    #    label="Observed CL$_{s+b}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor=clsb_clr,
+    #    markeredgecolor=clsb_clr,
+    #    linewidth=2.0,
+    #    ms=11,
+    #    linestyle=":",
+    #)
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["clb"],
+    #    label="Observed CL$_{b}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor="k",
+    #    markeredgecolor="k",
+    #    linewidth=2.0,
+    #    ms=11,
+    #)#
+
+    ax.plot(
+        poivalues,
+        pvalues["expected"],
+        label="Expected CL$_{s}-$Median",
+        color="k",
+        linestyle="--",
+        linewidth=1.5,
+        ms=10,
+    )
+
+    #ax.plot(
+    #    [poivalues[0], poivalues[-1]],
+    #    [alpha, alpha],
+    #    color="r",
+    #    linestyle="-",
+    #    linewidth=1.5,
+    #)
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_p1"],
+        facecolor=color_1sigma,
+        label="Expected CL$_{s} \\pm 1 \\sigma$",
+        alpha=0.8,
+    )
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_m1"],
+        facecolor=color_1sigma,
+        alpha=0.8,
+    )
+
+    #ax.fill_between(
+    #    poivalues,
+    #    pvalues["expected_p1"],
+    #    pvalues["expected_p2"],
+    #    facecolor=color_2sigma,
+    #    label="Expected CL$_{s} \\pm 2 \\sigma$",
+    #    alpha=0.8,
+    #)
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected_m1"],
+        pvalues["expected_m2"],
+        facecolor=color_2sigma,
+        alpha=0.8,
+    )
+
+    ax.set_ylim(-0.01, 1.1)
+    ax.set_ylabel("p-value")
+    ax.set_xlabel("parameter of interest")
+    ax.legend(loc="best", fontsize=14)
+
+    return ax
+
+def plotlimit_theoretical_2sigma(ul, alpha=0.05, CLs=True, ax=None):
+    """plot pvalue scan for different values of a parameter of interest (observed, expected and +/- sigma bands)
+
+    Args:
+        ul: UpperLimit instance
+        alpha (float, default=0.05): significance level
+        CLs (bool, optional): if `True` uses pvalues as $$p_{cls}=p_{null}/p_{alt}=p_{clsb}/p_{clb}$$
+            else as $$p_{clsb} = p_{null}$
+        ax (matplotlib axis, optionnal)
+    """
+    if ax is None:
+        ax = plt.gca()
+
+    poivalues = ul.poinull.values
+    pvalues = ul.pvalues(CLs=CLs)
+
+    if CLs:
+        cls_clr = "r"
+        clsb_clr = "b"
+    else:
+        cls_clr = "b"
+        clsb_clr = "r"
+
+    color_1sigma = "mediumseagreen"
+    color_2sigma = "gold"
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["cls"],
+    #    label="Observed CL$_{s}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor=cls_clr,
+    #    markeredgecolor=cls_clr,
+    #    linewidth=2.0,
+    #    ms=11,
+    #)
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["clsb"],
+    #    label="Observed CL$_{s+b}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor=clsb_clr,
+    #    markeredgecolor=clsb_clr,
+    #    linewidth=2.0,
+    #    ms=11,
+    #    linestyle=":",
+    #)
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["clb"],
+    #    label="Observed CL$_{b}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor="k",
+    #    markeredgecolor="k",
+    #    linewidth=2.0,
+    #    ms=11,
+    #)#
+
+    ax.plot(
+        poivalues,
+        pvalues["expected"],
+        label="Expected CL$_{s}-$Median",
+        color="k",
+        linestyle="--",
+        linewidth=1.5,
+        ms=10,
+    )
+
+    #ax.plot(
+    #    [poivalues[0], poivalues[-1]],
+    #    [alpha, alpha],
+    #    color="r",
+    #    linestyle="-",
+    #    linewidth=1.5,
+    #)
 
     ax.fill_between(
         poivalues,
@@ -123,6 +761,384 @@ def plotlimit(ul, alpha=0.05, CLs=True, ax=None):
 
     return ax
 
+def plotlimit_uncorrected_observed(ul, alpha=0.05, CLs=True, ax=None):
+    """plot pvalue scan for different values of a parameter of interest (observed, expected and +/- sigma bands)
+
+    Args:
+        ul: UpperLimit instance
+        alpha (float, default=0.05): significance level
+        CLs (bool, optional): if `True` uses pvalues as $$p_{cls}=p_{null}/p_{alt}=p_{clsb}/p_{clb}$$
+            else as $$p_{clsb} = p_{null}$
+        ax (matplotlib axis, optionnal)
+    """
+    if ax is None:
+        ax = plt.gca()
+
+    poivalues = ul.poinull.values
+    pvalues = ul.pvalues(CLs=CLs)
+
+    if CLs:
+        cls_clr = "r"
+        clsb_clr = "b"
+    else:
+        cls_clr = "b"
+        clsb_clr = "r"
+
+    color_1sigma = "mediumseagreen"
+    color_2sigma = "gold"
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["cls"],
+    #    label="Observed CL$_{s}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor=cls_clr,
+    #    markeredgecolor=cls_clr,
+    #    linewidth=2.0,
+    #    ms=11,
+    #)
+
+    ax.plot(
+        poivalues,
+        pvalues["clsb"],
+        label="Observed CL$_{s+b}$",
+        marker=".",
+        color="k",
+        markerfacecolor=clsb_clr,
+        markeredgecolor=clsb_clr,
+        linewidth=2.0,
+        ms=11,
+        linestyle=":",
+    )
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["clb"],
+    #    label="Observed CL$_{b}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor="k",
+    #    markeredgecolor="k",
+    #    linewidth=2.0,
+    #    ms=11,
+    #)#
+
+    ax.plot(
+        poivalues,
+        pvalues["expected"],
+        label="Expected CL$_{s}-$Median",
+        color="k",
+        linestyle="--",
+        linewidth=1.5,
+        ms=10,
+    )
+
+    #ax.plot(
+    #    [poivalues[0], poivalues[-1]],
+    #    [alpha, alpha],
+    #    color="r",
+    #    linestyle="-",
+    #    linewidth=1.5,
+    #)
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_p1"],
+        facecolor=color_1sigma,
+        label="Expected CL$_{s} \\pm 1 \\sigma$",
+        alpha=0.8,
+    )
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_m1"],
+        facecolor=color_1sigma,
+        alpha=0.8,
+    )
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected_p1"],
+        pvalues["expected_p2"],
+        facecolor=color_2sigma,
+        label="Expected CL$_{s} \\pm 2 \\sigma$",
+        alpha=0.8,
+    )
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected_m1"],
+        pvalues["expected_m2"],
+        facecolor=color_2sigma,
+        alpha=0.8,
+    )
+
+    ax.set_ylim(-0.01, 1.1)
+    ax.set_ylabel("p-value")
+    ax.set_xlabel("parameter of interest")
+    ax.legend(loc="best", fontsize=14)
+
+    return ax
+
+def plotlimit_correction_factor(ul, alpha=0.05, CLs=True, ax=None):
+    """plot pvalue scan for different values of a parameter of interest (observed, expected and +/- sigma bands)
+
+    Args:
+        ul: UpperLimit instance
+        alpha (float, default=0.05): significance level
+        CLs (bool, optional): if `True` uses pvalues as $$p_{cls}=p_{null}/p_{alt}=p_{clsb}/p_{clb}$$
+            else as $$p_{clsb} = p_{null}$
+        ax (matplotlib axis, optionnal)
+    """
+    if ax is None:
+        ax = plt.gca()
+
+    poivalues = ul.poinull.values
+    pvalues = ul.pvalues(CLs=CLs)
+
+    if CLs:
+        cls_clr = "r"
+        clsb_clr = "b"
+    else:
+        cls_clr = "b"
+        clsb_clr = "r"
+
+    color_1sigma = "mediumseagreen"
+    color_2sigma = "gold"
+
+    #ax.plot(
+    #    poivalues,
+    #    pvalues["cls"],
+    #    label="Observed CL$_{s}$",
+    #    marker=".",
+    #    color="k",
+    #    markerfacecolor=cls_clr,
+    #    markeredgecolor=cls_clr,
+    #    linewidth=2.0,
+    #    ms=11,
+    #)
+
+    ax.plot(
+        poivalues,
+        pvalues["clsb"],
+        label="Observed CL$_{s+b}$",
+        marker=".",
+        color="k",
+        markerfacecolor=clsb_clr,
+        markeredgecolor=clsb_clr,
+        linewidth=2.0,
+        ms=11,
+        linestyle=":",
+    )
+
+    ax.plot(
+        poivalues,
+        pvalues["clb"],
+        label="Observed CL$_{b}$",
+        marker=".",
+        color="k",
+        markerfacecolor="k",
+        markeredgecolor="k",
+        linewidth=2.0,
+        ms=11,
+    )
+
+    ax.plot(
+        poivalues,
+        pvalues["expected"],
+        label="Expected CL$_{s}-$Median",
+        color="k",
+        linestyle="--",
+        linewidth=1.5,
+        ms=10,
+    )
+
+    #ax.plot(
+    #    [poivalues[0], poivalues[-1]],
+    #    [alpha, alpha],
+    #    color="r",
+    #    linestyle="-",
+    #    linewidth=1.5,
+    #)
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_p1"],
+        facecolor=color_1sigma,
+        label="Expected CL$_{s} \\pm 1 \\sigma$",
+        alpha=0.8,
+    )
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_m1"],
+        facecolor=color_1sigma,
+        alpha=0.8,
+    )
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected_p1"],
+        pvalues["expected_p2"],
+        facecolor=color_2sigma,
+        label="Expected CL$_{s} \\pm 2 \\sigma$",
+        alpha=0.8,
+    )
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected_m1"],
+        pvalues["expected_m2"],
+        facecolor=color_2sigma,
+        alpha=0.8,
+    )
+
+    ax.set_ylim(-0.01, 1.1)
+    ax.set_ylabel("p-value")
+    ax.set_xlabel("parameter of interest")
+    ax.legend(loc="best", fontsize=14)
+
+    return ax
+
+def plotlimit_corrected_observed(ul, alpha=0.05, CLs=True, ax=None):
+    """plot pvalue scan for different values of a parameter of interest (observed, expected and +/- sigma bands)
+
+    Args:
+        ul: UpperLimit instance
+        alpha (float, default=0.05): significance level
+        CLs (bool, optional): if `True` uses pvalues as $$p_{cls}=p_{null}/p_{alt}=p_{clsb}/p_{clb}$$
+            else as $$p_{clsb} = p_{null}$
+        ax (matplotlib axis, optionnal)
+    """
+    if ax is None:
+        ax = plt.gca()
+
+    poivalues = ul.poinull.values
+    pvalues = ul.pvalues(CLs=CLs)
+
+    if CLs:
+        cls_clr = "r"
+        clsb_clr = "b"
+    else:
+        cls_clr = "b"
+        clsb_clr = "r"
+
+    color_1sigma = "mediumseagreen"
+    color_2sigma = "gold"
+
+    ax.plot(
+        poivalues,
+        pvalues["cls"],
+        label="Observed CL$_{s}$",
+        marker=".",
+        color="k",
+        markerfacecolor=cls_clr,
+        markeredgecolor=cls_clr,
+        linewidth=2.0,
+        ms=11,
+    )
+>>>>>>> Alternative_JPsi
+
+    ax.plot(
+        poivalues,
+        pvalues["clsb"],
+        label="Observed CL$_{s+b}$",
+        marker=".",
+        color="k",
+        markerfacecolor=clsb_clr,
+        markeredgecolor=clsb_clr,
+        linewidth=2.0,
+        ms=11,
+        linestyle=":",
+    )
+
+    ax.plot(
+        poivalues,
+        pvalues["clb"],
+        label="Observed CL$_{b}$",
+        marker=".",
+        color="k",
+        markerfacecolor="k",
+        markeredgecolor="k",
+        linewidth=2.0,
+        ms=11,
+    )
+
+    ax.plot(
+        poivalues,
+        pvalues["expected"],
+        label="Expected CL$_{s}-$Median",
+        color="k",
+        linestyle="--",
+        linewidth=1.5,
+        ms=10,
+    )
+
+<<<<<<< HEAD
+    ax.plot(
+        [poivalues[0], poivalues[-1]],
+        [alpha, alpha],
+        color="r",
+        linestyle="-",
+        linewidth=1.5,
+    )
+=======
+    #ax.plot(
+    #    [poivalues[0], poivalues[-1]],
+    #    [alpha, alpha],
+    #    color="r",
+    #    linestyle="-",
+    #    linewidth=1.5,
+    #)
+>>>>>>> Alternative_JPsi
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_p1"],
+        facecolor=color_1sigma,
+        label="Expected CL$_{s} \\pm 1 \\sigma$",
+        alpha=0.8,
+    )
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected"],
+        pvalues["expected_m1"],
+        facecolor=color_1sigma,
+        alpha=0.8,
+    )
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected_p1"],
+        pvalues["expected_p2"],
+        facecolor=color_2sigma,
+        label="Expected CL$_{s} \\pm 2 \\sigma$",
+        alpha=0.8,
+    )
+
+    ax.fill_between(
+        poivalues,
+        pvalues["expected_m1"],
+        pvalues["expected_m2"],
+        facecolor=color_2sigma,
+        alpha=0.8,
+    )
+
+    ax.set_ylim(-0.01, 1.1)
+    ax.set_ylabel("p-value")
+    ax.set_xlabel("parameter of interest")
+    ax.legend(loc="best", fontsize=14)
+
+<<<<<<< HEAD
+    return ax
+
 
 def one_minus_cl_plot(ci, alpha=[0.32], ax=None):
     x = ci.poinull.values
@@ -137,3 +1153,6 @@ def one_minus_cl_plot(ci, alpha=[0.32], ax=None):
     ax.set_ylabel("1-CL")
 
     return ax
+=======
+    return ax
+>>>>>>> Alternative_JPsi
